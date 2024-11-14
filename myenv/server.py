@@ -1,39 +1,38 @@
-import socket  
+import socket
 
-# Define the servers IP address
+# Define the server's IP address and port
 HOST = "127.0.0.1"  
-# Define the port number 
-PORT = 65432  
-
+PORT = 65432   
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    # AF_INET specifies that we’re using IPv4 addresses
-    # SOCK_STREAM specifies that we’re using a TCP connection 
-
-    # Bind the server to the specified IP address and port
-    s.bind((HOST, PORT))
-
-    # Start listening for incoming connections
+    # AF_INET specifies IPv4 and SOCK_STREAM specifies TCP connection
+    s.bind((HOST, PORT))  # Bind to the specified address and port
     s.listen()
-    print("Waiting for a connection...")  # server is ready
+    print("Waiting for a connection...")  # Server is ready
 
     # Accept a connection from a client
     conn, addr = s.accept()
-    # conn is the new socket object to communicate with the client
-    # addr is the address of the client that connected (IP address and port number)
-
-    with conn:  # Use a with statement to ensure the connection is closed automatically at the end of the block
+    with conn:
         print(f"Connected by {addr}")  # Debug
 
-        # Start an infinite loop to keep sending messages to the client
+        # Start an infinite loop to keep listening for commands
         while True:
-            # Prompt the server user to input a command or message
             command = input("Enter command to send to client (or 'exit' to close): ")
+            conn.sendall(command.encode("utf-8"))  # Send the command to the client
 
-            # We encode the string message into bytes (needed for network communication)
-            conn.sendall(command.encode("utf-8"))
-
-            # Check if the server wants to end the communication by typing 'exit'
+            # Check if the server wants to close the connection
             if command.lower() == 'exit':
-                print("Closing connection with client.")  # Debug
+                print("Closing connection with client.")  
                 break  
+
+            # Check if the server requested the log file from the client
+            elif command.upper() == "LOG":
+                try:
+                    # Receive the log data from the client
+                    log_data = conn.recv(4096).decode("utf-8")
+                    
+                    # Print the log file content received from the client
+                    print("Log file content received from client:")
+                    print(log_data)
+                except Exception as e:
+                    print(f"Error receiving log data from client: {e}")
