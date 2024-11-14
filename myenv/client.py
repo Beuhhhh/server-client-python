@@ -1,28 +1,35 @@
-import socket
+import socket 
+from pynput import keyboard
 
-HOST = "127.0.0.1"
-PORT = 65432
+# Define the servers IP address 
+HOST = "127.0.0.1"  
+# Define the port number to connect to (same as the server's listening port)
+PORT = 65432  
 
-# Connect to the server
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    # AF_INET specifies IPv4 and SOCK_STREAM specifies a TCP connection
+    
+    #connects to the server
     s.connect((HOST, PORT))
 
+    # Start an infinite loop 
     while True:
-        # Receive the command from the server
-        data = s.recv(4096)  # Larger buffer for function definitions
+        # Receive data from the server in chunks of up to 4096 bytes
+        data = s.recv(4096)
+
+        # If data is empty means the server closed the connection
         if not data:
-            break
+            print("Connection closed by server.")  
+            break  
 
+        # Decode the received data (bytes) back into a string for display
         command = data.decode("utf-8")
-        print(f"Executing command: {command}")
+        print(f"Server says: {command}")
 
-        try:
-            # Execute the command or function definition
-            exec(command)
-            if "(" in command and ")" in command:
-                s.sendall(b"Function call executed successfully")
-            else:
-                s.sendall(b"Function defined successfully")
+        # Check if the server sent the 'exit' command to close the connection
+        if command.lower() == 'exit':
+            print("Server requested to close the connection.") #debugging
+            break  
 
-        except Exception as e:
-            error_message = f"Error: {str(e)}"
+
+

@@ -1,35 +1,39 @@
-import socket
+import socket  
+
+# Define the servers IP address
+HOST = "127.0.0.1"  
+# Define the port number 
+PORT = 65432  
 
 
-HOST = "127.0.0.1"
-PORT = 65432
-
-# Define the pre-built commands
-commands = [
-    """def click(x, y):
-        import win32api, win32con
-        win32api.SetCursorPos((x, y))
-        win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, x, y, 0, 0)
-        win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, x, y, 0, 0)""",
-    "click(100, 200)",  # Example of calling the function after defining it
-    # Add more commands or function calls as needed
-]
-
-# Set up the server
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    # AF_INET specifies that we’re using IPv4 addresses
+    # SOCK_STREAM specifies that we’re using a TCP connection 
+
+    # Bind the server to the specified IP address and port
     s.bind((HOST, PORT))
+
+    # Start listening for incoming connections
     s.listen()
-    print("Waiting for a connection...")
+    print("Waiting for a connection...")  # server is ready
+
+    # Accept a connection from a client
     conn, addr = s.accept()
+    # conn is the new socket object to communicate with the client
+    # addr is the address of the client that connected (IP address and port number)
 
-    with conn:
-        print(f"Connected by {addr}")
+    with conn:  # Use a with statement to ensure the connection is closed automatically at the end of the block
+        print(f"Connected by {addr}")  # Debug
 
-        # Send each command from the list
-        for command in commands:
-            print(f"Sending command: {command}")
+        # Start an infinite loop to keep sending messages to the client
+        while True:
+            # Prompt the server user to input a command or message
+            command = input("Enter command to send to client (or 'exit' to close): ")
+
+            # We encode the string message into bytes (needed for network communication)
             conn.sendall(command.encode("utf-8"))
 
-            # Receive and print the client's response
-            response = conn.recv(1024).decode("utf-8")
-            print(f"Client response: {response}")
+            # Check if the server wants to end the communication by typing 'exit'
+            if command.lower() == 'exit':
+                print("Closing connection with client.")  # Debug
+                break  
