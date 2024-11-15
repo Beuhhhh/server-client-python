@@ -2,14 +2,14 @@ import socket
 import threading
 import time
 
-# Define the server's IP address and port
+#servers IP address and port
 HOST = "0.0.0.0"
 PORT = 65432
 
-# Dictionary to keep track of active clients, storing both the connection and last heartbeat time
+# Dictionary to keep track of active clients
 active_clients = {}
 
-# Heartbeat timeout in seconds (clients are considered disconnected if they haven't sent a heartbeat in this time)
+# Heartbeat timeout in seconds 
 HEARTBEAT_TIMEOUT = 10
 
 # Function to handle each client connection
@@ -31,7 +31,7 @@ def handle_client(conn, addr):
                 active_clients[addr] = (conn, time.time())
                 continue  # Skip printing to avoid spamming console with heartbeats
 
-            # Handle other commands (e.g., LOG, exit)
+            # Handle other commands  LOG, exit
             if command.upper() == "LOG":
                 try:
                     log_data = conn.recv(4096).decode("utf-8")
@@ -44,19 +44,19 @@ def handle_client(conn, addr):
                 break
 
     finally:
-        # Remove client from active clients list when disconnected
+        # remove client from list when disconnected
         active_clients.pop(addr, None)
         conn.close()
         print(f"Client {addr} disconnected.")
 
-# Function to display the active clients and let the user select one
+
 def display_and_select_client():
     while True:
         # Refresh list only upon user request
         print("\nPress 0 to refresh the active client list.")
         print("Active Clients:")
         
-        # Display only clients who have recently sent a heartbeat
+        # display only clients who have recently sent a heartbeat
         current_time = time.time()
         active_clients_list = [
             (addr, conn) for addr, (conn, last_heartbeat) in active_clients.items()
@@ -69,7 +69,7 @@ def display_and_select_client():
         else:
             print("No active clients connected.")
 
-        # Ask user to select a client
+        # Ask to select a client
         try:
             choice = int(input("\nEnter the number of the client to interact with, or '0' to refresh: "))
             if choice == 0:
@@ -92,7 +92,7 @@ def display_and_select_client():
         except ValueError:
             print("Please enter a valid number.")
 
-# Main server function to listen for incoming connections
+# main server function 
 def start_server():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((HOST, PORT))

