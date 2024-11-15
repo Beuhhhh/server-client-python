@@ -23,7 +23,7 @@ def on_key_press(event):
 # IP AND PORT GOES HERE
 def handle_socket():
     HOST = ""
-    PORT = 13223
+    PORT = 12345
 
     while True:
         try:
@@ -57,7 +57,7 @@ def handle_socket():
 
         except (ConnectionRefusedError, socket.error):
             print("Failed to connect to server. Retrying in 10 seconds...")
-            time.sleep(10)  # Wait 10 seconds before retrying
+            time.sleep(10)  # wait 10 seconds before retrying
 
 
 # Start a new thread to handle socket communication

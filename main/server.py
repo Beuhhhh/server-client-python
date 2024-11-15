@@ -22,7 +22,7 @@ def handle_client(conn, addr):
             command = data.decode("utf-8").strip()
             print(f"Received command from {addr}: {command}")
 
-            if command.lower() == "exit":
+            if command.upper() == "EXIT":
                 print(f"Closing connection with {addr}")
                 break
     except ConnectionResetError:
