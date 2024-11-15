@@ -1,7 +1,7 @@
 import socket
 import threading
 
-#servers IP address and port
+# servers IP address and port
 HOST = "0.0.0.0"
 PORT = 65432
 
@@ -22,8 +22,7 @@ def handle_client(conn, addr):
             command = data.decode("utf-8").strip()
             print(f"Received command from {addr}: {command}")
 
-            
-            if command.lower() == 'exit':
+            if command.lower() == "exit":
                 print(f"Closing connection with {addr}")
                 break
     except ConnectionResetError:
@@ -32,6 +31,7 @@ def handle_client(conn, addr):
         active_clients.remove((addr, conn))
         conn.close()
         print(f"Client {addr} disconnected.")
+
 
 # display and select clients manually
 def display_and_select_client():
@@ -52,10 +52,12 @@ def display_and_select_client():
                 selected_addr, selected_conn = active_clients[choice - 1]
                 print(f"Selected client: {selected_addr}")
 
-                # send commands 
-                command = input("Enter command to send to the client (or 'exit' to stop): ")
+                # send commands
+                command = input(
+                    "Enter command to send to the client (or 'exit' to stop): "
+                )
                 selected_conn.sendall(command.encode("utf-8"))
-                if command.lower() == 'exit':
+                if command.lower() == "exit":
                     selected_conn.close()
                     active_clients.remove((selected_addr, selected_conn))
                     print(f"Connection with client {selected_addr} closed.")
@@ -64,7 +66,8 @@ def display_and_select_client():
         except ValueError:
             print("Please enter a valid number.")
 
-#listen for incoming connections
+
+# listen for incoming connections
 def start_server():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((HOST, PORT))
@@ -76,6 +79,7 @@ def start_server():
             client_thread = threading.Thread(target=handle_client, args=(conn, addr))
             client_thread.daemon = True
             client_thread.start()
+
 
 # Start the server and client display threads
 if __name__ == "__main__":
