@@ -1,77 +1,68 @@
-Remote Access Client-Server System
-This project demonstrates a simple client-server architecture in Python for remote access, using TCP sockets to allow a server to send commands to connected clients. The client logs keystrokes and sends log data to the server upon request.
+# Keylogger and Server Communication
 
-Features
-Persistent client connections, with automatic retries if the server is unavailable.
-Command-based interaction between the server and clients.
-Log file storage on client machines.
-Remote access enabled via Ngrok for ease of server deployment.
+This project consists of two Python scripts: `client.py` and `server.py`. The client script logs key presses to a local file and communicates with a server to send the log data. The server script listens for incoming client connections, allows the server operator to interact with connected clients, and sends commands to them.
 
-Prerequisites
-Python 3.6+
-Ngrok account (free or paid plan depending on requirements)
-Setup Instructions
+## Files
 
-1. Clone the Repository
-git clone https://github.com/your-username/remote-access-system.git
-cd remote-access-system
-2. Set Up a Python Virtual Environment
+### `client.py`
 
-python3 -m venv myenv
-source myenv/bin/activate  # On Windows use `myenv\Scripts\activate`
-pip install -r requirements.txt
+The `client.py` script performs the following tasks:
 
-3. Ngrok Configuration
-To make the server accessible over the internet, we’ll use Ngrok to create a secure tunnel.
+- Logs key presses to a file located at `AppData/Roaming/RiotGames/log.txt`.
+- Hides the log file for security purposes.
+- Establishes a socket connection to a server.
+- Waits for server commands and performs actions based on those commands:
+  - `LOG`: Sends the content of the log file to the server.
+  - `exit`: Closes the connection to the server.
 
-Install Ngrok: Download and install Ngrok from the official website.
-Start Ngrok: Run the following command to create a TCP tunnel on port 65432 (or your server's port):
+### `server.py`
 
+The `server.py` script performs the following tasks:
 
-ngrok tcp 65432
-Copy the Ngrok Forwarding Address: Once Ngrok starts, it will display a forwarding address like x.tcp.ngrok.io:PORT. Use this address in client.py to replace the server IP and port.
+- Listens for incoming client connections
+- Maintains a list of active client connections.
+- Displays a list of active clients and allows the server operator to:
+  - Select a client by number.
+  - Send commands to the selected client.
+  - Close the connection with the client.
 
-Example Ngrok output:
+## Requirements
 
-Forwarding                    tcp://6.tcp.ngrok.io:13223 -> localhost:65432
-Here, 6.tcp.ngrok.io is the hostname, and 13223 is the port.
+- Python 3.x
+- External Libraries:
+  - `keyboard` (Install with `pip install keyboard`)
 
-4. Configure client.py
-In client.py, update the HOST and PORT variables with your Ngrok forwarding address. For example:
+## Usage
 
+### Running the Server
 
-HOST = "6.tcp.ngrok.io"  # Replace with your Ngrok hostname
-PORT = 13223             # Replace with your Ngrok port
-Usage
-1. Start the Server
-Run server.py on the host machine to start listening for client connections:
+1. Start the server by running `server.py`.
+2. The server will listen for incoming connections from clients.
+3. Once a client connects, the server operator can interact with the client by selecting it from the list of active clients and sending commands.
 
+### Running the Client
 
-python server.py
-The server will list active clients and provide options to send commands.
-Enter 0 to refresh the list of connected clients, and use numbers to select clients for interaction.
-2. Start the Client(s)
-Run client.py on each client machine:
+1. Start the client by running `client.py`.
+2. The client will attempt to connect to a remote server on port `xxxxx`.
+3. The client will log key presses to `AppData/Roaming/RiotGames/log.txt` and send the log file to the server when prompted.
 
+### Available Commands
 
-python client.py
-The client will attempt to connect to the server and retry every 10 seconds if the server is not yet available.
+#### Client Commands:
 
-3. Sending Commands to Clients
-LOG: Requests the client’s log file, which contains keystrokes logged during the client session.
-exit: Closes the connection with the selected client.
-Example interaction:
+- **LOG**: Sends the content of the `log.txt` file to the server.
+- **exit**: Closes the connection to the server.
 
+## Notes
 
-Active Clients (Enter '0' to refresh):
-1. ('127.0.0.1', 52152)
+- Ensure that the server and client are using the correct IP addresses and port numbers.
+- The client attempts to reconnect every 10 seconds if it fails to connect to the server.
+- The log file is hidden using the `attrib +h` command to avoid easy access.
 
-Select client by number or '0' to refresh: 1
-Enter the command to send to the client (or 'exit' to stop): LOG
-Security Disclaimer
-This project is intended solely for educational purposes. Logging keystrokes without consent is unethical and may be illegal. Always obtain permission from users before deploying any monitoring or remote access tool.
+## Security Disclaimer
 
-License
-This project is licensed under the MIT License.
+This project is intended for educational purposes only. Unauthorized use of keylogging and network monitoring can violate privacy and legal standards. Always obtain proper consent before deploying or using such tools.
 
-With this setup, you can remotely interact with any client machine running client.py as long as it is connected to the internet. The Ngrok tunnel will facilitate the secure, remote connection between the client and the server.
+## License
+
+This project is open source under the MIT License.
