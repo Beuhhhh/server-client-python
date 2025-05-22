@@ -26,6 +26,24 @@ The `server.py` script performs the following tasks:
   - Send commands to the selected client.
   - Close the connection with the client.
 
+### `Startup Persistence with VBS`
+To ensure the keylogger runs automatically on system startup, a Visual Basic Script (VBS) payload is provided. This script:
+
+Creates a shortcut (MyApp.lnk) in the user's Startup folder that runs silently using wscript.exe.
+
+The shortcut points to a hidden test.vbs file in %APPDATA%\Roaming\, which:
+
+Downloads a remote executable (test.exe) using curl.
+
+Saves and executes the file from the temporary directory.
+
+The process is fully hidden from the user (no visible windows).
+
+Automatically recreates required folders and files if they do not exist.
+
+his script establishes persistence and executes remote code, which can be highly malicious in nature. It should only be used for educational, ethical, and authorized security testing.
+
+
 ## Requirements
 
 - Python 3.x
