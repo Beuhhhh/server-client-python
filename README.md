@@ -41,7 +41,7 @@ The process is fully hidden from the user (no visible windows).
 
 Automatically recreates required folders and files if they do not exist.
 
-his script establishes persistence and executes remote code, which can be highly malicious in nature. It should only be used for educational, ethical, and authorized security testing.
+This script establishes persistence and executes remote code, which can be highly malicious in nature. It should only be used for educational, ethical, and authorized security testing.
 
 
 ## Requirements
