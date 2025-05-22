@@ -2,7 +2,7 @@ import socket
 import threading
 
 # servers IP address and port
-HOST = "0.0.0.0"
+HOST = "127.0.0.1"
 PORT = 65432
 
 # list to keep track of active clients
@@ -22,7 +22,7 @@ def handle_client(conn, addr):
             command = data.decode("utf-8").strip()
             print(f"Received command from {addr}: {command}")
 
-            if command.upper() == "EXIT":
+            if command.lower() == "exit":
                 print(f"Closing connection with {addr}")
                 break
     except ConnectionResetError:
