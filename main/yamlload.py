@@ -3,7 +3,9 @@ import requests
 import subprocess
 import os
 
-YAML_URL = "http://194.197.245.5/tiev21p/juuso/payloads.yaml"
+
+"Network drive YAML file payload"
+YAML_URL = ""
 
 
 def fetch_yaml(url):
