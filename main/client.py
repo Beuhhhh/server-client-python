@@ -22,8 +22,8 @@ def on_key_press(event):
 # handle socket communication
 # IP AND PORT GOES HERE
 def handle_socket():
-    HOST = ""
-    PORT = 13223
+    HOST = "127.0.0.1"
+    PORT = 65432
 
     while True:
         try:

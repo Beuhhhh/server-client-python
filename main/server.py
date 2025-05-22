@@ -2,7 +2,7 @@ import socket
 import threading
 
 # servers IP address and port
-HOST = "0.0.0.0"
+HOST = "127.0.0.1"
 PORT = 65432
 
 # list to keep track of active clients

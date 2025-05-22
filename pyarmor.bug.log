@@ -1,0 +1,12 @@
+[BUG]: no found input "yamlload.py"
+
+## Command Line
+C:\Users\messa\Desktop\remoteaccess\server-client-python\myenv\Scripts\pyarmor gen yamlload.py
+
+## Environments
+Python 3.11.4
+Pyarmor 9.0.5 (trial), 000000, non-profits
+Platform windows.x86_64
+Native windows.amd64
+Home C:\Users\messa\.pyarmor
+
