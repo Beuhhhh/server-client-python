@@ -53,6 +53,10 @@ This script establishes persistence and executes remote code, which can be highl
   - `requests`
   - `subprocess`
   - `os`
+  - `socket`
+  - `threading`
+  - `pathlib`
+  - `time`
   
 
 ## Usage
