@@ -49,6 +49,11 @@ This script establishes persistence and executes remote code, which can be highl
 - Python 3.x
 - External Libraries:
   - `keyboard` (Install with `pip install keyboard`)
+  - `Yaml`
+  - `requests`
+  - `subprocess`
+  - `os`
+  
 
 ## Usage
 
